@@ -3,6 +3,6 @@ import Button from '@mui/material/Button';
 
 export default function ShuffleCards() {
     return (
-        <Button>Primary</Button>
+        <Button>Shuffle Cards</Button>
     );
 }

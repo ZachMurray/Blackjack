@@ -1,44 +1,62 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 import Buttons from './components/Buttons';
+import { Container, ImageList, ImageListItem } from '@mui/material';
+import DrawCard from './components/DrawCard';
 
-function App() {
-  newDeck();
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <img
-          src="https://i.imgur.com/MK3eW3Am.jpg"
-          alt="Katherine Johnson"
-        />
-        <Buttons />
-      </header>
-    </div>
-  );
-}
-
-export default App;
-function newDeck() {
+async function newDeck() {
   const requestOptions = {
     method: "GET",
     redirect: "follow"
   };
 
-  fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6", requestOptions)
-    .then((response) => response.json())
-    .then((result) => console.log(result))
-    .catch((error) => console.error(error));
+  // return fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6", requestOptions)
+  //   .then((response) => response.json())
+  //   .then((result) => {
+  //     console.log(result);
+  //     return result;
+  //   })
+  //   .catch((error) => console.error(error));
+  const response = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6", requestOptions);
+  return await response.json();
 }
 
+class App extends React.Component {
+  // constructor () {
+  //   this.state = {};
+  // }
+
+  async componentDidMount () {
+    fetch('/some/async/data')
+      .then(resp => resp.json())
+      .then(data => this.setState({data}));
+  }
+
+  render() {
+    let cards = [
+      // {
+      //   "code": "9S",
+      //   "image": "https://deckofcardsapi.com/static/img/9S.png",
+      //   "images": {
+      //     "svg": "https://deckofcardsapi.com/static/img/9S.svg",
+      //     "png": "https://deckofcardsapi.com/static/img/9S.png"
+      //   },
+      //   "value": "9",
+      //   "suit": "SPADES"
+      // }
+    ];
+    let deck = newDeck();
+    console.log("deck: " + deck);
+    cards.push(DrawCard)
+    return (
+      <Container>
+        <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+          {cards.map((card => (<ImageListItem><img src={card.image} alt="" /></ImageListItem>)))}
+        </ImageList>
+        <Buttons />
+      </Container>
+    );
+  }
+}
+
+export default App;
